@@ -29,4 +29,4 @@ jobs:
           context: .
           file: ./techtrends/Dockerfile
           push: true
-          tag: dhirajmehtapaysense/techtrends:latest
+          tags: dhirajmehtapaysense/techtrends:latest
