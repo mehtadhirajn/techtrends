@@ -4,7 +4,7 @@ metadata:
   name: techtrends-prod
   namespace: argocd
 spec:
-  project: techtrends-prod
+  project: default
   source:
     helm:
       valueFiles:
@@ -14,4 +14,4 @@ spec:
     path: helm/
   destination:
     server: https://kubernetes.default.svc
-    namespace: prod
+    namespace: default
