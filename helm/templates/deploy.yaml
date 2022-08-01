@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: techtrends
-  # name: techtrends
+  name: techtrends-staging
   namespace: {{.Values.namespace.name}}
 spec:
   replicas: {{.Values.replicaCount}}
