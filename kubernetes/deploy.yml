@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -19,11 +19,11 @@ spec:
       - image: dhirajmehtapaysense/techtrends:latest
         name: techtrends
         ports:
-          containerPort: 3111
+        - containerPort: 3111
         reesources:
           requests:
             cpu: 250m
-            memnory: 64Mi
+            memory: 64Mi
           limits:
             cpu: 500m
             memory: 128Mi
