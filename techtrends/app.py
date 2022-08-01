@@ -10,6 +10,7 @@ from werkzeug.exceptions import abort
 def get_db_connection():
     connection = sqlite3.connect('database.db')
     connection.row_factory = sqlite3.Row
+    app.config['DB_CONNECTION_COUNT'] += 1 
     return connection
 
 # Function to get a post using its ID
@@ -23,7 +24,7 @@ def get_post(post_id):
 # Define the Flask application
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
-
+app.config['DB_CONNECTION_COUNT'] = 1
 # Define the main route of the web application 
 @app.route('/')
 def index():
@@ -38,16 +39,16 @@ def index():
 def post(post_id):
     post = get_post(post_id)
     if post is None:
-        logging.error("An article with id  : " + str(post_id) + " does not exisits.")
+        app.logger.error("An article with id  : " + str(post_id) + " does not exisits.")
         return render_template('404.html'), 404
     else:
-        logging.info("An article retrieved is : " + post["title"])
+        app.logger.info("An article retrieved is : " + post["title"])
         return render_template('post.html', post=post)
 
 # Define the About Us page
 @app.route('/about')
 def about():
-    logging.debug("The About Us page is retrieved.")
+    app.logger.debug("The About Us page is retrieved.")
     return render_template('about.html')
 
 # Define the post creation functionality 
@@ -65,7 +66,7 @@ def create():
                          (title, content))
             connection.commit()
             connection.close()
-            logging.info("A new article : " + title + " is created")
+            app.logger.info("A new article : " + title + " is created")
             return redirect(url_for('index'))
 
     return render_template('create.html')
@@ -80,7 +81,7 @@ def healthCheck():
 def metrics():
     connection = get_db_connection()
     posts = connection.execute('SELECT * FROM posts').fetchall()
-    total_connections = 1
+    total_connections = app.config['DB_CONNECTION_COUNT']
     connection.close()
     return app.response_class(response=json.dumps({"db_connection_count": total_connections, "post_count": len(posts)}),
             status=200,
